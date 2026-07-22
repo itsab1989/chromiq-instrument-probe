@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.1.0
+
+- **New `--analyze` step: check a capture before you send it.** A USB capture
+  is a large binary file, and until now there was no way to tell whether it
+  actually recorded your instrument or just an empty bus. `--analyze` reads a
+  `.pcap` you already made (it sends **nothing** to any device) and prints a
+  plain verdict — *"real device traffic captured, good to send"* or *"wrong
+  bus, or no measurement was taken"* — plus which device was seen and a
+  command timeline. With no path it finds the newest capture next to the tool.
+- **The command timeline is deliberately device-agnostic.** It assumes no
+  vendor command codes — which is the whole point for an unsupported device —
+  and simply shows the raw USB control commands and how much bulk data the
+  device streamed. That is exactly what an implementer needs to see what the
+  device's own software said to it. (Validated on real hardware: a ColorMunki
+  driven through ChromIQ, matched byte-for-byte to ArgyllCMS's own driver.)
+- macOS captures are decoded in full; Linux (usbmon) and Windows (USBPcap)
+  captures are reported as valid with counts, and are just as useful to send.
+
 ## v1.0.0
 
 - First version. A read-only collector for **any** colour measuring

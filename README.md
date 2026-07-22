@@ -156,6 +156,10 @@ Useful options:
 - `--skip-annotate` — never offer the advanced step.
 - `--annotate` — go straight into the advanced step.
 - `--capture-setup` — (macOS) just write the capture script and exit.
+- `--analyze [FILE …]` — read a USB capture and print a plain verdict (did it
+  record real instrument traffic?) plus a device-agnostic command timeline. With
+  no path it finds the newest capture next to the tool. Reads only; sends
+  nothing to any device.
 
 ---
 

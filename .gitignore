@@ -4,5 +4,9 @@ build/
 dist/
 *.spec
 chromiq-instrument-probe-*.txt
-start-usb-capture.command
+
+# Capture artefacts (contain the user's raw USB traffic — never commit)
 *.pcap
+io-capture-*
+tcpdump-*.log
+start-usb-capture.command
