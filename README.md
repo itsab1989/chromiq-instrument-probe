@@ -31,7 +31,7 @@ One ordered list per kind of instrument, a 20-minute short set for each (with
 at least one untidy ending), and the same lists are what the tool walks you
 through. The maker's manual always wins over these lists.
 
-> **Status of version 2.0.0: built and tested with made-up recordings only.
+> **Status of version 2.0.1: built and tested with made-up recordings only.
 > It has not yet been run with a real instrument on any system.** If you try
 > it, you are among the first, and a report of what happened (good or bad)
 > helps as much as a recording.
@@ -192,6 +192,13 @@ expected to work; not tried yet.)
 
 Nothing to install, and System Integrity Protection stays on. The tool uses
 the Mac's own `tcpdump`, which asks for your password through `sudo`.
+
+macOS (15 and newer) may hide the list of devices on your network from the
+tool (its "Local Network" privacy). The tool does not need that list: when it
+comes up empty, type the instrument's address (the maker's program or the
+instrument's display usually shows it). Whether your router is refused is
+decided from the routes and this Mac's own network addresses, which stay
+visible.
 
 ### macOS: USB, honestly
 

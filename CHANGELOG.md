@@ -1,5 +1,26 @@
 # Changelog
 
+## v2.0.1 (2026-11-22)
+
+From the first real run of 2.0.0, on a Mac:
+
+- **Fixed: on a Mac the network recording refused with "router unknown" on a
+  normal network.** macOS (15 and newer, very likely its "Local Network"
+  privacy) hides the list of devices on the network from the tool, and 2.0.0
+  needed the router's hardware address from that list. The router check now
+  uses only the routes and this computer's own network addresses: an address
+  is refused when it is a default gateway, or when it is on none of this
+  computer's own networks (reached through the router, or through a VPN); a
+  computer with no IPv4 default route at all (a direct cable) may record. IPv6
+  routes and tunnel interfaces (utun and the like, normal on every Mac) play no
+  part. The message names what was found.
+- `--type network` no longer asks how the instrument is connected.
+- A missing recording program (tcpdump not in the system's folders) gives a
+  plain sentence instead of a crash.
+- Windows: the four tests that failed there in the 2.0.0 build are made right
+  for Windows (the folder rights are checked through icacls, POSIX file modes
+  only on POSIX), and the tests block the Windows build again.
+
 ## v2.0.0 (2026-11-22)
 
 A new tool in the same place: the **universal recording probe**. Version 1.x

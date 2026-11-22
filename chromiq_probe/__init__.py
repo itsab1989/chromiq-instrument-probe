@@ -6,4 +6,4 @@ owner can check and send. It never sends anything to any device and never
 uploads anything. Standard library only, Python 3.8 or newer.
 """
 
-VERSION = "2.0.0"
+VERSION = "2.0.1"
