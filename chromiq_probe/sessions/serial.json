@@ -1,0 +1,243 @@
+{
+  "format": "chromiq-probe-session/1",
+  "id": "serial",
+  "title": "Serial instrument (RS-232)",
+  "summary": "An instrument with a serial port (often older strip readers and bench instruments), connected through a USB serial adapter.",
+  "transport": "usb",
+  "experience": "reasoned",
+  "experience_text": "No recording of a serial instrument has reached us yet. This list is our best reasoning from the handheld and table work. The tool records the USB side of the serial adapter and turns it back into the serial bytes (decoded for FTDI and standard CDC adapters, shown raw for others). A serial port built into the computer, with no USB adapter, cannot be listened to: please use a USB serial adapter for the recording. If your program offers something this list misses, please tell us.",
+  "before_you_start": [
+    "The instrument, its serial cable and a USB serial adapter, and the program you normally use, closed for now.",
+    "A sample or chart the instrument can measure.",
+    "Unplug other USB devices you can do without (disks, memory sticks, phones, printers). A keyboard and a mouse may stay."
+  ],
+  "blocks": [
+    {
+      "id": "R01",
+      "label": "connect",
+      "title": "Start the program and connect",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "disconnects": true,
+      "steps": [
+        "Make sure the program is closed and the USB serial adapter is unplugged.",
+        "Start this block (the recording starts now).",
+        "Plug the adapter in (with the instrument already on its other end, switched on).",
+        "Start the program and connect to the instrument (choose its port if the program asks).",
+        "Wait until the program shows the instrument as ready."
+      ],
+      "note": "Which port and settings did the program show (for example COM3, 9600 baud)? Did it search for the instrument by itself?",
+      "why": "The connection shows the line settings and the first commands; a program that searches may try several speeds, which tells us which one the instrument uses.",
+      "short": true
+    },
+    {
+      "id": "R02",
+      "label": "calibrate",
+      "title": "Calibrate",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "only_if": "If the instrument needs no calibration, record 30 seconds of the program waiting and say so.",
+      "steps": [
+        "Start this block.",
+        "Start the calibration in the program as you normally do, and wait until it is done."
+      ],
+      "note": "What did you have to do? How long did it take?",
+      "why": "Calibration is usually the simplest command and answer to understand.",
+      "short": true
+    },
+    {
+      "id": "R03",
+      "label": "spot",
+      "title": "One measurement, three times",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Measure the same patch or sample three times."
+      ],
+      "note": "Did the program show numbers? Were they the same each time?",
+      "why": "Three answers to the same question show the message format and whether the instrument does its own colour maths.",
+      "short": true
+    },
+    {
+      "id": "R04",
+      "label": "job-to-end",
+      "ask_saved_file": true,
+      "title": "A strip or a small job to the end, saved",
+      "priority": "essential",
+      "minutes": 4,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Read a strip or a few samples to the end, the normal way.",
+        "Save the result in the program under a name you will recognise, and send that file together with the zip."
+      ],
+      "note": "The name of the saved file.",
+      "why": "A whole job paired with the program's own saved result lets us check every number.",
+      "short": true
+    },
+    {
+      "id": "R05",
+      "label": "refused",
+      "title": "A reading that fails on purpose",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Make one reading fail in a harmless way (for example lift the instrument, or measure nothing).",
+        "Read the program's message and answer it the normal way."
+      ],
+      "note": "What exactly did the program say?",
+      "why": "How the instrument reports a bad reading is what ChromIQ must understand.",
+      "short": true
+    },
+    {
+      "id": "R06",
+      "label": "cancel",
+      "title": "Cancel during a reading",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a reading and press Cancel or Stop in the program while it runs."
+      ],
+      "note": "What did the instrument do?",
+      "why": "A cancel is an ending ChromIQ must handle cleanly.",
+      "short": true
+    },
+    {
+      "id": "R07",
+      "label": "modes",
+      "title": "Every other mode",
+      "priority": "important",
+      "minutes": 4,
+      "kind": "record",
+      "only_if": "Only the modes your program offers.",
+      "steps": [
+        "Start this block.",
+        "For each other mode, filter or measurement condition the program offers, take one reading.",
+        "Before each one, type the mode's name here and press Enter."
+      ],
+      "note": "The modes you tried, in order.",
+      "why": "Each mode may be its own command."
+    },
+    {
+      "id": "R08",
+      "label": "instrument-keys",
+      "title": "Measuring from the instrument's own keys",
+      "priority": "nice to have",
+      "minutes": 2,
+      "kind": "record",
+      "only_if": "Only if the instrument can measure on its own and send the result.",
+      "steps": [
+        "Start this block.",
+        "Take one measurement with the instrument's own key or display, and let it send the result to the program."
+      ],
+      "note": "What did you press on the instrument?",
+      "why": "Some instruments send results without being asked; ChromIQ would have to listen for them."
+    },
+    {
+      "id": "R09",
+      "label": "idle",
+      "title": "Five quiet minutes",
+      "priority": "important",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "With the program connected and idle, do nothing for five minutes."
+      ],
+      "note": "Did anything happen on its own?",
+      "why": "Some programs poll a serial instrument all the time; ChromIQ must know whether it needs that."
+    },
+    {
+      "id": "R10",
+      "label": "cable-pull",
+      "title": "Pull the serial cable and plug it back",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "With the program idle, pull the serial cable at the instrument (leave the USB adapter plugged in).",
+        "Wait 10 seconds, plug it back, and see whether the program notices."
+      ],
+      "note": "Did the program notice the cable was gone?",
+      "why": "A serial line gives no sign of a pulled cable by itself; how the program notices tells ChromIQ how to.",
+      "ending": "untidy"
+    },
+    {
+      "id": "R11",
+      "label": "power-cycle",
+      "title": "Switch the instrument off and on",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "With the program open and idle, switch the instrument off, wait 10 seconds, and switch it on again.",
+        "Connect again in the program if you must."
+      ],
+      "note": "Did the program reconnect by itself?",
+      "why": "What an instrument says when it wakes up is often the clearest message it ever sends.",
+      "ending": "untidy"
+    },
+    {
+      "id": "R12",
+      "label": "close",
+      "title": "Close the program",
+      "priority": "essential",
+      "minutes": 1,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Close the program the normal way, and wait 10 seconds."
+      ],
+      "note": "",
+      "why": "What the program sends when it closes is what ChromIQ should do when it lets go of the instrument."
+    },
+    {
+      "id": "R13",
+      "label": "unexpected-end",
+      "title": "The program ends by force while a reading, then starts again",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "ending": "untidy",
+      "steps": [
+        "Start this block.",
+        "Start a reading in the program.",
+        "While it is busy, end the program by force (Windows: Task Manager (Ctrl+Shift+Esc), select the program, End task. Mac: Apple menu > Force Quit, select the program, Force Quit.) Type killed.",
+        "Wait 20 seconds. Start the program again and note what it does with the instrument (a new calibration, a message)."
+      ],
+      "note": "What did the instrument do when the program disappeared, and when it came back?",
+      "why": "After an unexpected end the instrument is left as the program left it; how the maker's program recovers is what ChromIQ needs after its own unexpected end.",
+      "short": true
+    },
+    {
+      "id": "Q1",
+      "label": "questions",
+      "title": "A few questions",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "question",
+      "steps": [
+        "No recording now. Answer the questions below; a short line each is fine."
+      ],
+      "questions": [
+        "Which instrument is it exactly?",
+        "Which program and which version did you use, on which system?",
+        "Which USB serial adapter did you use, if you know (the name on it or its box)?",
+        "Does the program offer anything that these blocks did not cover?"
+      ],
+      "note": "",
+      "why": "The recording cannot say which program made it.",
+      "short": true
+    }
+  ]
+}

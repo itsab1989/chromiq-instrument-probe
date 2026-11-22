@@ -10,3 +10,8 @@ chromiq-instrument-probe-*.txt
 io-capture-*
 tcpdump-*.log
 start-usb-capture.command
+*.pcapng
+*.etl
+probe-session-*
+SEND-THIS-*.zip
+.pytest_cache/

@@ -1,0 +1,244 @@
+{
+  "format": "chromiq-probe-session/1",
+  "id": "network",
+  "title": "Network-connected instrument",
+  "summary": "A bench, table or inline instrument that is connected by a network cable or Wi-Fi rather than USB.",
+  "transport": "net",
+  "experience": "reasoned",
+  "experience_text": "No recording of a network instrument has reached us yet. This list is our best reasoning: the same start states, readings and endings as for USB instruments, plus what is special about a network (finding the instrument, a connection that drops, a new address after a restart). If the program's connection is encrypted, the tool can still keep sizes and timing, and says so. If your program offers something this list misses, please tell us.",
+  "before_you_start": [
+    "The instrument, connected to your network the way you always use it, and the program you normally use, closed for now.",
+    "A sample or chart the instrument can measure.",
+    "If you know the instrument's network address (the program or the instrument's display may show it), have it ready. If not, the tool helps you find it.",
+    "The tool keeps only traffic to and from the instrument. Your other network traffic (web pages, mail) is left out before anything is written, but it is still a good idea to close programs you do not need."
+  ],
+  "blocks": [
+    {
+      "id": "N01",
+      "label": "connect",
+      "title": "Start the program and connect",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Make sure the program is closed.",
+        "Start this block (the recording starts now).",
+        "Start the program and connect it to the instrument the way you always do.",
+        "Wait until the program shows the instrument as ready, then wait 15 seconds more."
+      ],
+      "note": "Did the program find the instrument by itself, or did you type its address or pick it from a list?",
+      "why": "How the program finds and greets the instrument is the first thing ChromIQ must repeat.",
+      "short": true
+    },
+    {
+      "id": "N02",
+      "label": "calibrate",
+      "title": "Calibrate",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "only_if": "If the instrument needs no calibration, record 30 seconds of the program waiting and say so.",
+      "steps": [
+        "Start this block.",
+        "Start the calibration in the program as you normally do, and wait until it is done."
+      ],
+      "note": "What did you have to do (a tile, a reference)? How long did it take?",
+      "why": "Calibration is the first measurement-like conversation and usually the simplest to understand.",
+      "short": true
+    },
+    {
+      "id": "N03",
+      "label": "one-measurement",
+      "title": "One single measurement",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Take the smallest measurement the program offers (one patch, one sample), three times on the same spot."
+      ],
+      "note": "Did the program show numbers? Were they the same each time?",
+      "why": "One short request and answer is the easiest place to learn the instrument's message format.",
+      "short": true
+    },
+    {
+      "id": "N04",
+      "label": "job-to-end",
+      "ask_saved_file": true,
+      "title": "A small job to the end, saved",
+      "priority": "essential",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Measure a small chart or a few samples to the end, the normal way.",
+        "Save the result in the program under a name you will recognise, and send that file together with the zip."
+      ],
+      "note": "The name of the saved file.",
+      "why": "A whole job paired with the program's own saved result lets us check every number.",
+      "short": true
+    },
+    {
+      "id": "N05",
+      "label": "cancel",
+      "title": "Cancel during a measurement",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a job, and press Cancel or Stop in the program while it is measuring.",
+        "Wait until the program and the instrument are at rest."
+      ],
+      "note": "What did the instrument do?",
+      "why": "A cancel is an ending ChromIQ must handle cleanly.",
+      "short": true
+    },
+    {
+      "id": "N06",
+      "label": "status",
+      "title": "The instrument's information page",
+      "priority": "important",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Open the program's page that shows the instrument's details or status (model, firmware, lamp hours), look, and close it. Change nothing."
+      ],
+      "note": "What did the page show (no serial numbers needed)?",
+      "why": "Status requests show how the instrument describes itself, which ChromIQ needs to recognise a model."
+    },
+    {
+      "id": "N07",
+      "label": "modes",
+      "title": "Every other mode",
+      "priority": "important",
+      "minutes": 5,
+      "kind": "record",
+      "only_if": "Only the modes your program offers.",
+      "steps": [
+        "Start this block.",
+        "For each other measurement mode or condition the program offers, take one measurement.",
+        "Before each one, type the mode's name here and press Enter."
+      ],
+      "note": "The modes you tried, in order.",
+      "why": "Each mode may be its own command."
+    },
+    {
+      "id": "N08",
+      "label": "warning",
+      "title": "A warning the program gives",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Create one harmless situation the program warns about, only if you are comfortable with it (for example start a measurement with no sample).",
+        "Read the message and answer it the normal way."
+      ],
+      "note": "What exactly did the program say?",
+      "why": "How the instrument reports a problem is what ChromIQ must understand and explain."
+    },
+    {
+      "id": "N09",
+      "label": "idle",
+      "title": "Five quiet minutes",
+      "priority": "important",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "With the program connected and idle, do nothing for five minutes."
+      ],
+      "note": "Did anything happen on its own?",
+      "why": "Network programs often send keep-alive messages; without them some instruments drop the connection."
+    },
+    {
+      "id": "N10",
+      "label": "cable-pull",
+      "title": "The network drops for a moment",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "disconnects": true,
+      "steps": [
+        "Start this block (the recording keeps going).",
+        "With the program idle, pull the instrument's network cable (or, for Wi-Fi, switch its Wi-Fi off if it has a switch). Do not pull your computer's own cable.",
+        "Wait 20 seconds and read what the program says.",
+        "Connect it again and wait until the program shows it again (or says it cannot)."
+      ],
+      "note": "What did the program say, and did it reconnect by itself?",
+      "why": "A dropped connection is an ending ChromIQ must survive.",
+      "ending": "untidy"
+    },
+    {
+      "id": "N11",
+      "label": "power-cycle",
+      "title": "Switch the instrument off and on",
+      "priority": "important",
+      "minutes": 4,
+      "kind": "record",
+      "disconnects": true,
+      "steps": [
+        "Start this block.",
+        "With the program open and idle, switch the instrument off.",
+        "Wait 10 seconds, switch it on again, and wait until the program shows it again (connect again by hand if you must)."
+      ],
+      "note": "Did the program notice and reconnect by itself?",
+      "why": "After a restart an instrument may get a new network address; the tool follows it, and we learn how the program finds it again.",
+      "ending": "untidy"
+    },
+    {
+      "id": "N13",
+      "label": "close",
+      "title": "Close the program",
+      "priority": "essential",
+      "minutes": 1,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Close the program the normal way, and wait 10 seconds."
+      ],
+      "note": "",
+      "why": "What the program sends when it closes is what ChromIQ should do when it lets go of the instrument."
+    },
+    {
+      "id": "N14",
+      "label": "unexpected-end",
+      "title": "The program ends by force while a measurement, then starts again",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "ending": "untidy",
+      "steps": [
+        "Start this block.",
+        "Start a measurement in the program.",
+        "While it is busy, end the program by force (Windows: Task Manager (Ctrl+Shift+Esc), select the program, End task. Mac: Apple menu > Force Quit, select the program, Force Quit.) Type killed.",
+        "Wait 20 seconds. Start the program again and note what it does with the instrument (a new calibration, a message)."
+      ],
+      "note": "What did the instrument do when the program disappeared, and when it came back?",
+      "why": "After an unexpected end the instrument is left as the program left it; how the maker's program recovers is what ChromIQ needs after its own unexpected end.",
+      "short": true
+    },
+    {
+      "id": "Q1",
+      "label": "questions",
+      "title": "A few questions",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "question",
+      "steps": [
+        "No recording now. Answer the questions below; a short line each is fine."
+      ],
+      "questions": [
+        "Which instrument is it exactly, and which firmware does it show?",
+        "Which program and which version did you use, on which system?",
+        "How is it connected: a cable to your network, a cable straight to the computer, or Wi-Fi?",
+        "Does the program offer anything that these blocks did not cover?"
+      ],
+      "note": "",
+      "why": "The recording cannot say which program made it or how the instrument is wired.",
+      "short": true
+    }
+  ]
+}

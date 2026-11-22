@@ -1,0 +1,364 @@
+{
+  "format": "chromiq-probe-session/1",
+  "id": "handheld",
+  "title": "Handheld spot and strip instrument",
+  "summary": "An instrument you hold in your hand: you place it on one patch (spot) or slide it along a row of patches (strip), with or without a ruler.",
+  "transport": "usb",
+  "experience": "real",
+  "experience_text": "This list is built from real sessions: owners of an i1Pro, i1Pro 2, i1Pro 3 and ColorMunki recorded X-Rite's programs with the earlier X-Rite recording tool, and every block below answers a question that cost us an extra round when it was missing (lights, the ruler, dual scan, the measurement conditions M0, M1 and M2, refused strips, calibration).",
+  "before_you_start": [
+    "Your instrument, its USB cable and its calibration tile or cap.",
+    "The program you normally measure with, closed for now.",
+    "One printed test chart that your program can read, with at least one row of 10 or more patches.",
+    "If your program uses a ruler or a backing board for strips: have it ready.",
+    "Unplug other USB devices you can do without (disks, memory sticks, phones, printers). A keyboard and a mouse may stay."
+  ],
+  "blocks": [
+    {
+      "id": "H01",
+      "label": "start",
+      "title": "Plug in and start the program",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "disconnects": true,
+      "steps": [
+        "Make sure the measuring program is closed and the instrument is unplugged.",
+        "Start this block (the recording starts now).",
+        "Plug the instrument in.",
+        "Start the measuring program.",
+        "Wait until the program shows the instrument as connected, then wait 15 seconds more without touching anything."
+      ],
+      "note": "Did the program find the instrument by itself? Did it show anything about the instrument (model, firmware, serial)? What did the instrument's lights do?",
+      "why": "The first conversation is where the program identifies the instrument and reads its memory, and it is the one ChromIQ must repeat every time.",
+      "short": true
+    },
+    {
+      "id": "H02",
+      "label": "calibrate",
+      "title": "Calibrate",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start the calibration in the program, exactly as you normally do (white tile, or the instrument's calibration position).",
+        "Wait until the program says the calibration is done."
+      ],
+      "note": "How long did it take? Did the program ask you to move a dial, place the instrument on a tile, or press a button? What did the lights do?",
+      "why": "Calibration is the first thing ChromIQ must do right, and its timing and commands differ between models.",
+      "short": true
+    },
+    {
+      "id": "H03",
+      "label": "strip",
+      "title": "One strip at your normal speed",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "In the program, start reading a strip (a row of patches).",
+        "Read one row at your normal speed, from where you usually start.",
+        "Wait until the program has accepted the strip."
+      ],
+      "note": "Which row, and from which end? Which measurement condition did the program show (M0, M1, M2, dual scan, or none)? What did the lights do before, during and after?",
+      "why": "This is the reading ChromIQ needs most often: how the program starts a strip, how the readings arrive, and how it decides the strip is good.",
+      "short": true
+    },
+    {
+      "id": "H04",
+      "label": "spot",
+      "title": "One patch, three times (spot)",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "only_if": "Skip this block if the program has no way to read one single patch.",
+      "steps": [
+        "Start this block.",
+        "Switch the program to reading single patches (spot mode).",
+        "Read the same patch three times, lifting the instrument in between.",
+        "Switch the program back to strips if it does not do so by itself."
+      ],
+      "note": "Did the program show numbers for each reading? Were they the same each time, or slightly different?",
+      "why": "A spot reading has its own command, and three readings of one patch show whether the instrument does its own colour maths or sends raw sensor data."
+    },
+    {
+      "id": "H05",
+      "label": "strip-refused",
+      "title": "A strip that fails on purpose",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a strip as in block H03.",
+        "Let it fail in one harmless way: lift the instrument halfway along the row, or move much too fast, or read the wrong row.",
+        "Read what the program says, and confirm its message.",
+        "If you like, do a second kind of failure the same way."
+      ],
+      "note": "Which way did you make it fail? What exactly did the program say? Did the lights change?",
+      "why": "Every ending must be known, not only the good one: how the instrument and the program report a bad strip decides what ChromIQ can tell its users.",
+      "short": true
+    },
+    {
+      "id": "H06",
+      "label": "cancel-reading",
+      "title": "Cancel while reading",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a strip in the program.",
+        "While the instrument is reading (button pressed or reading under way), press Cancel or Stop in the program.",
+        "Wait until the program is ready again."
+      ],
+      "note": "At which moment did you cancel? What did the program and the lights do?",
+      "why": "A cancel in the middle of a reading is an ending ChromIQ must handle cleanly, and only a recording shows what the program sends then.",
+      "short": true
+    },
+    {
+      "id": "H07",
+      "label": "reference-chart",
+      "ask_saved_file": true,
+      "title": "A small chart to the end, saved",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Read a small chart (or two or three rows of your chart) to the end, the normal way.",
+        "Save the measurement in the program (for example as a CGATS or text file), under a name you will recognise.",
+        "Keep that saved file: please send it together with the zip."
+      ],
+      "note": "The name of the file you saved, and which rows you read.",
+      "why": "A recording paired with the program's own result of that very measurement lets us check every number; a file saved another day cannot be paired.",
+      "short": true
+    },
+    {
+      "id": "H08",
+      "label": "dual-scan",
+      "title": "The same strip in dual scan",
+      "priority": "important",
+      "minutes": 4,
+      "kind": "record",
+      "only_if": "Only if the program offers dual scan (i1Pro 2, i1Pro 3 and others).",
+      "steps": [
+        "Start this block.",
+        "Switch the program to dual scan (or the mode that reads M0, M1 and M2 at once).",
+        "Read the row of block H03 as the program asks (often twice: forward and back). Type pass 1 and pass 2 when you start each pass."
+      ],
+      "note": "How many passes did the program ask for, and what did the lights do?",
+      "why": "A dual scan uses its own commands and a second pass, and ChromIQ can only offer it once it has seen them."
+    },
+    {
+      "id": "H18",
+      "label": "conditions",
+      "title": "Each measurement condition on its own",
+      "priority": "important",
+      "minutes": 4,
+      "kind": "record",
+      "only_if": "Only the conditions the program offers (M0, M1, M2, UV cut, polarisation).",
+      "steps": [
+        "Start this block.",
+        "For each condition the program offers: switch to it, type its name and press Enter, and read the row of block H03."
+      ],
+      "note": "The conditions you tried, in order.",
+      "why": "Each condition may be its own command or its own pass."
+    },
+    {
+      "id": "H19",
+      "label": "no-ruler",
+      "title": "The same strip without the ruler",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "only_if": "Only if the program offers reading with and without a ruler or backing board.",
+      "steps": [
+        "Start this block.",
+        "Switch the program to reading without the ruler (if it has a setting for it), and read the row of block H03 freehand."
+      ],
+      "note": "Did the program accept it?",
+      "why": "Some instruments read the ruler's position; a strip without it shows what the program does when that data is missing."
+    },
+    {
+      "id": "H20",
+      "label": "other-modes",
+      "title": "Every other reading mode",
+      "priority": "nice to have",
+      "minutes": 4,
+      "kind": "record",
+      "only_if": "Only the modes your program offers that the blocks before did not cover.",
+      "steps": [
+        "Start this block.",
+        "For each other way of reading the program offers (for example patch recognition on or off), type its name, press Enter and read one strip."
+      ],
+      "note": "The modes you tried, in order.",
+      "why": "Each mode may use its own commands."
+    },
+    {
+      "id": "H09",
+      "label": "strip-reverse",
+      "title": "The same strip from the other end",
+      "priority": "important",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Read the row of block H03 again, but starting from the other end.",
+        "Wait until the program has accepted or refused it."
+      ],
+      "note": "Did the program accept the strip read backwards?",
+      "why": "Whether a strip may be read in both directions, and how the program tells, changes how ChromIQ checks a strip."
+    },
+    {
+      "id": "H10",
+      "label": "strip-fast",
+      "title": "The same strip, clearly faster",
+      "priority": "important",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Read the row of block H03 again, clearly faster than normal (but not so fast that you expect a failure).",
+        "Wait until the program has accepted or refused it."
+      ],
+      "note": "Accepted or refused? About how many seconds did the row take?",
+      "why": "The readings per second and per patch, and the speed limit, come only from strips at different speeds."
+    },
+    {
+      "id": "H11",
+      "label": "strip-slow",
+      "title": "The same strip, slowly",
+      "priority": "important",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Read the row of block H03 again, about twice as slowly as normal (count the seconds).",
+        "Wait until the program has accepted or refused it."
+      ],
+      "note": "Accepted or refused? About how many seconds did the row take?",
+      "why": "Together with H10 this shows how the instrument copes with speed, which decides ChromIQ's own speed advice."
+    },
+    {
+      "id": "H12",
+      "label": "buttons-lights",
+      "title": "The button and the lights",
+      "priority": "nice to have",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "With the program waiting for a reading, press the instrument's button once without placing it on a patch, and see what happens.",
+        "If the program has settings for sounds or lights, open them and look, without changing them."
+      ],
+      "note": "What did the lights and the program do when you pressed the button?",
+      "why": "The lights and the button are how an instrument talks to its user, and ChromIQ wants to use them the same way the maker's program does."
+    },
+    {
+      "id": "H13",
+      "label": "idle",
+      "title": "Five quiet minutes",
+      "priority": "important",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Leave the program open and the instrument connected, and do nothing for five minutes.",
+        "If the program asks for a new calibration during that time, note it, but do not calibrate yet."
+      ],
+      "note": "Did anything happen on its own (a message, a light, a sound)?",
+      "why": "Programs often talk to an idle instrument (keep-alive, temperature, a calibration that expires), and ChromIQ must know what keeps the instrument happy."
+    },
+    {
+      "id": "H14",
+      "label": "cable-pull",
+      "title": "Pull the cable and plug it back",
+      "priority": "important",
+      "minutes": 2,
+      "kind": "record",
+      "disconnects": true,
+      "steps": [
+        "Start this block (the recording keeps going while the instrument is gone).",
+        "With the program open and idle, pull the instrument's USB cable.",
+        "Wait 10 seconds and read what the program says.",
+        "Plug the cable back in and wait until the program shows the instrument again (or says it cannot)."
+      ],
+      "note": "What did the program say when the cable was pulled, and when it came back? Did it ask for a new calibration?",
+      "why": "A pulled cable is an ending ChromIQ must survive; the recording shows how the program finds the instrument again.",
+      "ending": "untidy"
+    },
+    {
+      "id": "H15",
+      "label": "close",
+      "title": "Close the program",
+      "priority": "essential",
+      "minutes": 1,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Close the measuring program the normal way.",
+        "Wait 10 seconds."
+      ],
+      "note": "Did the instrument's lights change when the program closed?",
+      "why": "What the program sends when it closes is what ChromIQ should send when it lets go of the instrument."
+    },
+    {
+      "id": "H16",
+      "label": "restart",
+      "title": "The program ends unexpectedly, then starts again",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block, with the program open and the instrument plugged in.",
+        "End the program by force (Windows: Task Manager, select the program, End task. Mac: Apple menu > Force Quit).",
+        "Start the measuring program again.",
+        "Wait until it shows the instrument, and calibrate if it asks you to."
+      ],
+      "note": "Did it ask for a calibration this time? Did the instrument's lights change?",
+      "why": "After an unexpected end the instrument is left as the program left it; how the program starts again from there is what ChromIQ needs after its own unexpected end.",
+      "ending": "untidy",
+      "short": true
+    },
+    {
+      "id": "H17",
+      "label": "unplug-mid-strip",
+      "title": "Unplug the cable in the middle of a strip",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "disconnects": true,
+      "ending": "untidy",
+      "steps": [
+        "Start this block (the recording keeps going while the instrument is gone).",
+        "Start reading a strip, and halfway along the row pull the instrument's USB cable. Type pulled.",
+        "Wait 10 seconds, plug it back in (into the same port) and let the program find it again."
+      ],
+      "note": "What did the program say, and did it want a new calibration?",
+      "why": "An instrument that disappears in the middle of a reading is an ending ChromIQ must survive."
+    },
+    {
+      "id": "Q1",
+      "label": "questions",
+      "title": "A few questions",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "question",
+      "steps": [
+        "No recording now. Answer the questions below; a short line each is fine."
+      ],
+      "questions": [
+        "Which instrument is it exactly (model and, if you know it, its generation)?",
+        "Which program and which version did you use?",
+        "On which system (Windows, macOS, Linux, and which version)?",
+        "Does your program offer anything that these blocks did not cover? A short description helps us add it to this list."
+      ],
+      "note": "",
+      "why": "The recording cannot say which program and version made it, and a missing block is best found by the person who uses the program.",
+      "short": true
+    }
+  ]
+}

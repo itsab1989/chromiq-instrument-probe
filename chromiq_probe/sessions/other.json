@@ -1,0 +1,212 @@
+{
+  "format": "chromiq-probe-session/1",
+  "id": "other",
+  "title": "Something else",
+  "summary": "Any other measuring instrument: a short general frame, and free recordings you label yourself.",
+  "transport": "usb",
+  "experience": "reasoned",
+  "experience_text": "A general frame drawn from all the other lists. You know your instrument best: add free recordings for anything it does that these blocks miss, and tell us what they were.",
+  "before_you_start": [
+    "The instrument, its cables, and the program you normally use, closed for now.",
+    "Something the instrument can measure.",
+    "If it is connected by USB: unplug other USB devices you can do without (disks, memory sticks, phones, printers). A keyboard and a mouse may stay."
+  ],
+  "blocks": [
+    {
+      "id": "O01",
+      "label": "start",
+      "title": "Start the program and connect",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "disconnects": true,
+      "steps": [
+        "Make sure the program is closed (and, for a USB instrument, that it is unplugged).",
+        "Start this block (the recording starts now).",
+        "Plug the instrument in or switch it on, start the program, and connect.",
+        "Wait until the program shows the instrument as ready."
+      ],
+      "note": "Did the program find the instrument by itself?",
+      "why": "How the program finds and greets the instrument is the first thing ChromIQ must repeat.",
+      "short": true
+    },
+    {
+      "id": "O02",
+      "label": "calibrate",
+      "title": "Calibrate",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "only_if": "If the instrument needs no calibration, record 30 seconds of the program waiting and say so.",
+      "steps": [
+        "Start this block.",
+        "Calibrate as the program asks, and wait until it is done."
+      ],
+      "note": "What did you have to do?",
+      "why": "Calibration is usually the simplest command and answer to understand.",
+      "short": true
+    },
+    {
+      "id": "O03",
+      "label": "typical-job",
+      "ask_saved_file": true,
+      "title": "A typical measurement, saved",
+      "priority": "essential",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Measure the way you always do, to the end.",
+        "Save the result in the program under a name you will recognise, and send that file together with the zip."
+      ],
+      "note": "What did you measure, and the name of the saved file.",
+      "why": "A typical job paired with the program's own result is the most useful single recording.",
+      "short": true
+    },
+    {
+      "id": "O04",
+      "label": "cancel",
+      "title": "Cancel during a measurement",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a measurement and press Cancel or Stop in the program while it runs."
+      ],
+      "note": "What did the instrument do?",
+      "why": "A cancel is an ending ChromIQ must handle cleanly.",
+      "short": true
+    },
+    {
+      "id": "O05",
+      "label": "refused",
+      "title": "A measurement that fails on purpose",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Make one measurement fail in a harmless way, read the program's message and answer it."
+      ],
+      "note": "What did you do, and what did the program say?",
+      "why": "How the instrument reports a problem is what ChromIQ must understand."
+    },
+    {
+      "id": "O06",
+      "label": "modes",
+      "title": "Every other mode",
+      "priority": "important",
+      "minutes": 5,
+      "kind": "record",
+      "only_if": "Only the modes your program offers.",
+      "steps": [
+        "Start this block.",
+        "For each other mode the program offers, take one measurement.",
+        "Before each one, type the mode's name here and press Enter."
+      ],
+      "note": "The modes you tried, in order.",
+      "why": "Each mode may be its own command."
+    },
+    {
+      "id": "O07",
+      "label": "idle",
+      "title": "Five quiet minutes",
+      "priority": "important",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "With the program connected and idle, do nothing for five minutes."
+      ],
+      "note": "Did anything happen on its own?",
+      "why": "Programs often keep talking to an idle instrument."
+    },
+    {
+      "id": "O08",
+      "label": "disconnect",
+      "title": "Disconnect and reconnect",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "disconnects": true,
+      "steps": [
+        "Start this block (the recording keeps going).",
+        "With the program idle, pull the instrument's cable (or switch it off).",
+        "Wait 10 seconds, connect it again, and wait until the program shows it again."
+      ],
+      "note": "What did the program say?",
+      "why": "A lost connection is an ending ChromIQ must survive.",
+      "ending": "untidy"
+    },
+    {
+      "id": "O09",
+      "label": "free",
+      "title": "Anything else, labelled by you",
+      "priority": "nice to have",
+      "minutes": 5,
+      "kind": "record",
+      "repeatable": true,
+      "ask_label": true,
+      "steps": [
+        "Type a short label for what you will record (for example \"lamp test\").",
+        "Start this block and do that one thing in the program.",
+        "You can do this block as often as you like, with a new label each time."
+      ],
+      "note": "What did you do?",
+      "why": "You know what your instrument can do; anything we did not think of is welcome."
+    },
+    {
+      "id": "O10",
+      "label": "close",
+      "title": "Close the program",
+      "priority": "essential",
+      "minutes": 1,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Close the program the normal way, and wait 10 seconds."
+      ],
+      "note": "",
+      "why": "What the program sends when it closes is what ChromIQ should do when it lets go of the instrument."
+    },
+    {
+      "id": "O11",
+      "label": "unexpected-end",
+      "title": "The program ends by force while a measurement, then starts again",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "ending": "untidy",
+      "steps": [
+        "Start this block.",
+        "Start a measurement in the program.",
+        "While it is busy, end the program by force (Windows: Task Manager (Ctrl+Shift+Esc), select the program, End task. Mac: Apple menu > Force Quit, select the program, Force Quit.) Type killed.",
+        "Wait 20 seconds. Start the program again and note what it does with the instrument (a new calibration, a message)."
+      ],
+      "note": "What did the instrument do when the program disappeared, and when it came back?",
+      "why": "After an unexpected end the instrument is left as the program left it; how the maker's program recovers is what ChromIQ needs after its own unexpected end.",
+      "short": true
+    },
+    {
+      "id": "Q1",
+      "label": "questions",
+      "title": "A few questions",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "question",
+      "steps": [
+        "No recording now. Answer the questions below; a short line each is fine."
+      ],
+      "questions": [
+        "Which instrument is it, and what kind (spot, strip, table, sheet reader, something else)?",
+        "Which program and which version did you use, on which system?",
+        "How is it connected?",
+        "What else can it do that these blocks did not cover?"
+      ],
+      "note": "",
+      "why": "The recording cannot say which program made it.",
+      "short": true
+    }
+  ]
+}

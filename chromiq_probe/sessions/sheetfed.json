@@ -1,0 +1,234 @@
+{
+  "format": "chromiq-probe-session/1",
+  "id": "sheetfed",
+  "title": "Sheet-fed chart reader",
+  "summary": "A device that pulls a chart page in by itself, finds the rows and reads them, like the X-Rite i1iSis.",
+  "transport": "usb",
+  "experience": "reasoned",
+  "experience_text": "No recording of a sheet-fed reader has reached us yet. This list is our best reasoning from the table and handheld work: the same start states, readings and endings, adapted to a device that feeds the paper itself. If your program offers something this list misses, please tell us.",
+  "before_you_start": [
+    "The reader, its cables, and the program you normally use, closed for now.",
+    "Two printed chart pages the reader can read (a chart of two pages is ideal), and one plain sheet of the same paper.",
+    "Some readers must be switched on before their USB cable is plugged in: do it the way the maker says.",
+    "The maker's manual wins: if a block contradicts it, follow the manual and skip the block.",
+    "Unplug other USB devices you can do without (disks, memory sticks, phones, printers). A keyboard and a mouse may stay."
+  ],
+  "blocks": [
+    {
+      "id": "S01",
+      "label": "switch-on",
+      "title": "Switch on and start the program",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "disconnects": true,
+      "steps": [
+        "Make sure the program is closed and the reader is off.",
+        "Start this block (the recording starts now).",
+        "Switch the reader on (and plug in its USB cable, if that is the maker's order), and wait until it is quiet.",
+        "Start the program and wait until it says the reader is ready."
+      ],
+      "note": "Did the reader do anything by itself at the start (move rollers, light up, calibrate)?",
+      "why": "The start of a just-switched-on reader is the first thing ChromIQ must repeat exactly.",
+      "short": true
+    },
+    {
+      "id": "S02",
+      "label": "calibrate",
+      "title": "Calibrate",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "only_if": "If the program has no separate calibration, record 30 seconds of the program waiting instead and say so in the note.",
+      "steps": [
+        "Start this block.",
+        "Start the calibration in the program, if it has one.",
+        "Wait until the program says it is done."
+      ],
+      "note": "Was there a separate calibration, or does the reader calibrate by itself?",
+      "why": "Where a reader calibrates (an inner tile, a white strip on the page) changes every reading after it.",
+      "short": true
+    },
+    {
+      "id": "S03",
+      "label": "page-to-end",
+      "ask_saved_file": true,
+      "title": "One chart page to the end, saved",
+      "priority": "essential",
+      "minutes": 4,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Feed the first chart page, as the program asks, and let it read the whole page.",
+        "Let the reader push the page out.",
+        "Save the measurement in the program under a name you will recognise, and send that file together with the zip."
+      ],
+      "note": "How did the page go in (by itself, after a button)? The name of the saved file.",
+      "why": "One whole page, from feeding to the saved result, is the core job ChromIQ would drive, and pairing it with the program's own file lets us check every number.",
+      "short": true
+    },
+    {
+      "id": "S04",
+      "label": "second-page",
+      "title": "The next page of the chart",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "only_if": "Only if your chart has more than one page.",
+      "steps": [
+        "Start this block.",
+        "Feed the second page when the program asks for it, and let it be read to the end."
+      ],
+      "note": "Did the program check that it was the right page (a barcode, a mark)?",
+      "why": "How the program tells pages apart decides how ChromIQ prints and reads multi-page charts."
+    },
+    {
+      "id": "S05",
+      "label": "wrong-sheet",
+      "title": "A plain sheet instead of a chart",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a reading, and feed the plain sheet instead of a chart page.",
+        "Read what the program says, and answer it the normal way."
+      ],
+      "note": "What exactly did the program say, and what did the reader do with the sheet?",
+      "why": "A refused sheet is an ending ChromIQ must recognise and explain; only a recording shows how the reader reports it.",
+      "short": true
+    },
+    {
+      "id": "S06",
+      "label": "cancel-reading",
+      "title": "Cancel while a page is being read",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Feed a chart page and start the reading.",
+        "While the page is moving through the reader, press Cancel or Stop in the program.",
+        "Wait until the reader is at rest, and take the page out the way the program says."
+      ],
+      "note": "What happened to the page? Did the program ask you to do anything?",
+      "why": "A cancel with paper inside is the ending most likely to leave a device in a strange state."
+    },
+    {
+      "id": "S07",
+      "label": "modes",
+      "title": "Every other reading mode",
+      "priority": "important",
+      "minutes": 4,
+      "kind": "record",
+      "only_if": "Only the modes your program offers.",
+      "steps": [
+        "Start this block.",
+        "For each other mode or measurement condition the program offers (for example M1, M2, UV, a faster or slower setting), read one page.",
+        "Before each page, type the setting's name here and press Enter."
+      ],
+      "note": "The settings you tried, in order.",
+      "why": "Each mode may be its own set of commands, and ChromIQ can only offer what it has seen."
+    },
+    {
+      "id": "S08",
+      "label": "eject",
+      "title": "The program's eject or feed controls",
+      "priority": "nice to have",
+      "minutes": 2,
+      "kind": "record",
+      "only_if": "Only if the program has such buttons.",
+      "steps": [
+        "Start this block.",
+        "Use each paper control the program offers (eject, feed, clean) once, with no paper inside.",
+        "Before each one, type its name here and press Enter."
+      ],
+      "note": "Which controls, and what each did.",
+      "why": "Each control is a command ChromIQ could offer for the same purpose, for example to free a page."
+    },
+    {
+      "id": "S09",
+      "label": "idle",
+      "title": "Five quiet minutes",
+      "priority": "important",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "With the program open and no paper inside, do nothing for five minutes."
+      ],
+      "note": "Did anything happen on its own?",
+      "why": "Programs often keep talking to an idle device; ChromIQ must know what keeps it ready."
+    },
+    {
+      "id": "S10",
+      "label": "cable-pull",
+      "title": "Pull the cable and plug it back",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "disconnects": true,
+      "steps": [
+        "Start this block (the recording keeps going while the reader is gone).",
+        "With no paper inside and the program idle, pull the reader's USB cable.",
+        "Wait 10 seconds, plug it back in, and wait until the program shows the reader again."
+      ],
+      "note": "What did the program say?",
+      "why": "A pulled cable is an ending ChromIQ must survive without needing the maker's program."
+    },
+    {
+      "id": "S11",
+      "label": "close",
+      "title": "Close the program",
+      "priority": "essential",
+      "minutes": 1,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Close the program the normal way, and wait 10 seconds."
+      ],
+      "note": "Did the reader do anything when the program closed?",
+      "why": "What the program sends when it closes is what ChromIQ should do when it lets go of the reader."
+    },
+    {
+      "id": "S12",
+      "label": "unexpected-end",
+      "title": "The program ends by force while a chart page is being read, then starts again",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "ending": "untidy",
+      "steps": [
+        "Start this block.",
+        "Start a chart page is being read in the program.",
+        "While it is busy, end the program by force (Windows: Task Manager (Ctrl+Shift+Esc), select the program, End task. Mac: Apple menu > Force Quit, select the program, Force Quit.) Type killed.",
+        "Wait 20 seconds. Start the program again and note what it does with the instrument (a new calibration, a message).",
+        "Take the page out the way the maker's manual says."
+      ],
+      "note": "What did the instrument do when the program disappeared, and when it came back?",
+      "why": "After an unexpected end the instrument is left as the program left it; how the maker's program recovers is what ChromIQ needs after its own unexpected end.",
+      "short": true
+    },
+    {
+      "id": "Q1",
+      "label": "questions",
+      "title": "A few questions",
+      "priority": "essential",
+      "minutes": 5,
+      "kind": "question",
+      "steps": [
+        "No recording now. Answer the questions below; a short line each is fine."
+      ],
+      "questions": [
+        "Which reader is it exactly?",
+        "Which program and which version did you use, on which system?",
+        "Which chart did you use, and what paper size? If you can, send the chart file too.",
+        "What does the printed chart have besides patches (marks, a barcode, a white strip)?",
+        "Does the program offer anything that these blocks did not cover?"
+      ],
+      "note": "",
+      "why": "What is printed around the patches is what ChromIQ must print on its own charts for the reader to accept them.",
+      "short": true
+    }
+  ]
+}

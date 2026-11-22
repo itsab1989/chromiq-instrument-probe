@@ -1,0 +1,409 @@
+{
+  "format": "chromiq-probe-session/1",
+  "id": "table",
+  "title": "Motorised table (xy)",
+  "summary": "A table with a moving arm that carries an instrument over a sheet lying on it, reading row by row or patch by patch.",
+  "transport": "usb",
+  "experience": "real",
+  "experience_text": "This list is built from the X-Rite i1iO 2 work, where a table owner recorded X-Rite's i1Profiler for us. Every block answers something that cost an extra round when it was missing: the start of a table that was just switched on, the start with the arm out over the sheet, the alignment, every reading mode, the whole reach of the arm, and every ending (finish, cancel, a pulled cable, a power cycle). Its blocks follow the reviewed recording plan for the X-Rite i1iO 3 (see the example page), made general.",
+  "before_you_start": [
+    "The table, its instrument, and the program you normally use, closed for now.",
+    "A small printed chart the program can read (2 or 3 rows), a few copies, and if you have one a larger chart.",
+    "A ruler, for one measurement in the questions at the end.",
+    "Space around the table: the arm must be able to move freely. Keep your hands away from it while it moves; the table's power switch is the way to stop it.",
+    "The maker's manual wins: if a block contradicts it, follow the manual and skip the block.",
+    "A table is often TWO USB devices (the table and the instrument in its arm): choose both when the tool asks.",
+    "Unplug other USB devices you can do without (disks, memory sticks, phones, printers, other adapters). A keyboard and a mouse may stay."
+  ],
+  "blocks": [
+    {
+      "id": "T01",
+      "label": "table-idle",
+      "title": "The table idle, the program closed",
+      "priority": "important",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Make sure the program is closed and the table is switched on.",
+        "Start this block.",
+        "Wait 30 seconds and touch nothing."
+      ],
+      "note": "Where does the arm rest? Is the instrument in the arm? Any light on the table?",
+      "why": "It shows which USB devices the table and the instrument are, which decides almost everything else."
+    },
+    {
+      "id": "T02",
+      "label": "warm-start",
+      "title": "Start and quit the program, table already on",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block, with the program closed and the table on.",
+        "Start the program and wait until it shows the table and the instrument, then 20 seconds more.",
+        "Quit the program normally (its menu, Quit or Exit), and wait 10 seconds."
+      ],
+      "note": "Did the arm move when the program started or quit?",
+      "why": "How the program finds the table and lets go of it is the first and the last thing ChromIQ does every time."
+    },
+    {
+      "id": "T03",
+      "label": "cold-start",
+      "title": "Switch the table on while recording, start and quit the program",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Close the program. Start this block.",
+        "Switch the table off at its power switch, wait 10 seconds, switch it on and wait until it is quiet.",
+        "Start the program and wait until it has found the table.",
+        "Quit the program normally and wait 10 seconds."
+      ],
+      "note": "Did the arm move by itself after switching on, and when the program started?",
+      "why": "A table that was just switched on needs its own start-up, and ChromIQ must start it the same way the maker's program does.",
+      "short": true,
+      "disconnects": true
+    },
+    {
+      "id": "T04",
+      "label": "calibrate",
+      "title": "Calibrate",
+      "priority": "essential",
+      "minutes": 2,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a measurement in the program up to the point where it calibrates, and let it calibrate exactly as it asks.",
+        "If it then goes on to aiming, press Cancel and let the arm come to rest. Leave the program open."
+      ],
+      "note": "Where did the arm go for the calibration, and what did the program ask you to do?",
+      "why": "Where and how a table calibrates decides the first moves ChromIQ makes.",
+      "short": true
+    },
+    {
+      "id": "T05",
+      "label": "rows-to-end",
+      "title": "A small chart in rows, aimed and read to the end, saved",
+      "priority": "essential",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Lay a small chart (2 or 3 rows) in the middle of the table, as the program shows.",
+        "Start this block.",
+        "Start the measurement in the program's row (scan or strip) mode, with its default speed.",
+        "Aim at the points it asks for. Before each aim, type which mark it is (for example \"top left\") and press Enter.",
+        "Let it read the whole chart without cancelling, and wait until the arm is home and still.",
+        "Save the measurement under a name you will recognise, and send that file together with the zip."
+      ],
+      "note": "How many points did you aim at, and how did you confirm each (the instrument's button or a click)? Were the rows read all the same way or back and forth?",
+      "why": "A whole job, from the first aim to the parked arm, paired with the program's own saved result, is the backbone of everything ChromIQ will drive.",
+      "short": true,
+      "ask_saved_file": true
+    },
+    {
+      "id": "T06",
+      "label": "patch-by-patch-to-end",
+      "title": "The same chart patch by patch, saved",
+      "priority": "essential",
+      "minutes": 6,
+      "kind": "record",
+      "steps": [
+        "Leave the chart where it lies. Switch the program to reading patch by patch (spot), if it offers it.",
+        "Start this block.",
+        "Start the measurement, aim as it asks, and let it read the whole chart. For the first five patches type d when the head goes down and u when it goes up.",
+        "Wait until the arm is home and still, then save the measurement."
+      ],
+      "note": "How long did one patch take, roughly?",
+      "why": "Patch by patch is a different drive with its own moves, head movements and timing.",
+      "only_if": "Skip this block if the program cannot read patch by patch.",
+      "ask_saved_file": true
+    },
+    {
+      "id": "T07",
+      "label": "cancel-then-quit",
+      "title": "Cancel in the middle of a row, then quit",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start reading the chart in rows and aim as asked.",
+        "When the arm starts along the second row, press Cancel in the program and type cancel.",
+        "Wait until the arm stands still, then quit the program normally and wait 10 seconds."
+      ],
+      "note": "What did the arm do after Cancel, and after quitting?",
+      "why": "A cancel with the arm out, and the quit after it, is what ChromIQ must do when a user presses Stop.",
+      "short": true
+    },
+    {
+      "id": "T08",
+      "label": "force-quit-while-aiming",
+      "title": "The program ends by force while it waits for an aim, then starts again",
+      "priority": "essential",
+      "minutes": 4,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a measurement and go on until the program asks you to aim at the first point. Do not aim, do not touch the arm.",
+        "End the program by force (Windows: Task Manager (Ctrl+Shift+Esc), select the program, End task. Mac: Apple menu > Force Quit, select the program, Force Quit.) Type killed.",
+        "Wait 20 seconds. Start the program again and watch exactly what the arm does when it finds the table.",
+        "Quit the program normally."
+      ],
+      "note": "What did the arm do when the program came back (straight home, or somewhere else first)?",
+      "why": "This is the state an unexpected end leaves a table in, and how the maker's program repairs it. On the first table we supported it was the most expensive state to have missed.",
+      "short": true,
+      "ending": "untidy"
+    },
+    {
+      "id": "T09",
+      "label": "force-quit-during-row",
+      "title": "The program ends by force during a row, then starts again",
+      "priority": "essential",
+      "minutes": 4,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start reading the chart in rows.",
+        "While the arm moves along the second row, end the program by force (Windows: Task Manager (Ctrl+Shift+Esc), select the program, End task. Mac: Apple menu > Force Quit, select the program, Force Quit.) Type killed.",
+        "Watch the arm: it may stop where it is. Keep your hands away; if it keeps moving, switch the table off.",
+        "Wait 20 seconds, start the program again and note what the arm does. Quit it normally."
+      ],
+      "note": "Where did the arm stop, and what did the program do with it when it came back?",
+      "why": "After a crash in the middle of a movement the table is left in a state only the maker's own recovery shows.",
+      "ending": "untidy"
+    },
+    {
+      "id": "T10",
+      "label": "quit-while-aiming",
+      "title": "Quit normally while the program waits for an aim",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a measurement and go on until the program asks you to aim. Do not aim.",
+        "Quit the program normally (its menu; confirm if it asks). Type quit.",
+        "Wait 20 seconds. Start the program again, note what the arm does, quit it."
+      ],
+      "note": "What did the arm do when the program quit, and when it started again?",
+      "why": "The maker's tidy-up at this moment is the design ChromIQ copies for its own endings."
+    },
+    {
+      "id": "T11",
+      "label": "quit-with-arm-out",
+      "title": "Quit normally with the arm out over the sheet",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start reading the chart in rows and aim as asked.",
+        "As soon as the second row has finished, quit the program normally (do not press Cancel first). Type quit.",
+        "Wait 20 seconds. Start the program again, note what the arm does, quit it."
+      ],
+      "note": "What did the arm do when the program quit in the middle of the chart?",
+      "why": "How the maker's program tidies up when it quits mid-job, with the arm held out, is what ChromIQ must do too."
+    },
+    {
+      "id": "T12",
+      "label": "aiming-across-power-cycle",
+      "title": "The aiming state across a power cycle, with no program running",
+      "priority": "essential",
+      "minutes": 4,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Start a measurement and go on until it asks you to aim, then end the program by force (type killed). Do not touch the arm.",
+        "Switch the table off, wait 10 seconds, switch it on (type power off and power on). Note what the arm does by itself.",
+        "Start the program (nothing has run since the power cycle) and note what the arm does. Quit it normally."
+      ],
+      "note": "What did the arm do after switching on, and when the program found the table?",
+      "why": "Whether a table remembers its state across a power cycle decides what ChromIQ must check at every start.",
+      "disconnects": true,
+      "ending": "untidy"
+    },
+    {
+      "id": "T13",
+      "label": "way-home",
+      "title": "The way home from one part of the table (repeat for each part)",
+      "priority": "essential",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Lay the small chart (cut to size if needed) in one part of the table: back left, back right, front left, front right, or the middle. Type that part as the label.",
+        "Start this block. Start a patch by patch measurement there and aim as asked.",
+        "After two or three patches, while the arm stands still on a patch, end the program by force (type killed).",
+        "Wait 20 seconds. Start the program again and note exactly the way the arm takes home. Quit it normally.",
+        "Do this block once for each part of the table."
+      ],
+      "note": "Which part of the table, and the way the arm took home (straight, or first somewhere else)?",
+      "why": "The maker's software may bring the arm home by a detour from some parts of the table; on the first table we supported we found those late. Here the program itself puts the arm there: you never push it.",
+      "repeatable": true,
+      "ask_label": true,
+      "ending": "untidy"
+    },
+    {
+      "id": "T14",
+      "label": "power-cycle-program-running",
+      "title": "Switch the table off and on while the program runs",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block. With the arm at rest and the program open, switch the table off.",
+        "Wait 10 seconds, switch it on again, and wait until the program shows it again."
+      ],
+      "note": "Did the program notice? Did the arm move after switching on?",
+      "why": "A table switched off under a running program is a start state ChromIQ meets too.",
+      "disconnects": true,
+      "ending": "untidy"
+    },
+    {
+      "id": "T15",
+      "label": "cable-pull",
+      "title": "Pull the USB cable during a measurement",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Only if you are comfortable with it, and only if the maker's manual does not warn against it.",
+        "Start this block. Start a measurement and, while the arm moves, pull the table's USB cable. Type pulled.",
+        "Wait 10 seconds, plug the cable back in (into the same port) and see what the program does."
+      ],
+      "note": "What did the arm and the program do?",
+      "why": "A pulled cable is an ending ChromIQ must survive without needing the maker's program.",
+      "disconnects": true,
+      "ending": "untidy"
+    },
+    {
+      "id": "T16",
+      "label": "patch-length",
+      "title": "Every patch length and speed (repeat for each)",
+      "priority": "important",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Make small charts of two rows at five patch sizes spread over the whole range the program offers for row reading (the smallest, the largest and three between).",
+        "For each chart, and then for the fastest and the slowest speed setting: type a label such as length-1 or fastest, start this block, aim, let it read both rows and save the measurement."
+      ],
+      "note": "The patch size or speed setting, and how long one row took.",
+      "why": "On the first table we supported the speed depended on the patch length, and every speed not recorded had to be asked for again.",
+      "repeatable": true,
+      "ask_label": true,
+      "ask_saved_file": true
+    },
+    {
+      "id": "T17",
+      "label": "conditions",
+      "title": "Every measurement condition",
+      "priority": "important",
+      "minutes": 8,
+      "kind": "record",
+      "steps": [
+        "For each condition the program offers (M0, M1, M2, dual scan, UV cut): type its name as the label, start this block, let it read one row, and save the measurement."
+      ],
+      "note": "The conditions you tried, in order, and anything that looked different (an extra pass, other lights).",
+      "why": "Each condition may use its own commands and its own pass.",
+      "repeatable": true,
+      "ask_label": true,
+      "ask_saved_file": true,
+      "only_if": "Only the conditions your program offers."
+    },
+    {
+      "id": "T18",
+      "label": "aim-everywhere",
+      "title": "Aiming at the far corners of the table",
+      "priority": "important",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Start this block. Lay a chart as far out as the program allows, or aim at points near each corner of the table's area if the program lets you.",
+        "Aim as the program asks and let it read the first and last row."
+      ],
+      "note": "Where on the table did the chart lie?",
+      "why": "ChromIQ may move the arm wherever the table can reach; recordings near the edges show the real limits instead of a guess."
+    },
+    {
+      "id": "T19",
+      "label": "warning",
+      "title": "A warning the program gives",
+      "priority": "important",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Create one harmless situation the program warns about, only if you are comfortable with it: for example start a reading with no sheet on the table, or with the sheet hold off.",
+        "Read the message and answer it the normal way. Never hold the arm back or force it by hand."
+      ],
+      "note": "What did you do, and what exactly did the program say?",
+      "why": "How the table reports a problem is what ChromIQ will have to understand and explain."
+    },
+    {
+      "id": "T20",
+      "label": "program-controls",
+      "title": "The program's own arm controls",
+      "priority": "nice to have",
+      "minutes": 3,
+      "kind": "record",
+      "steps": [
+        "Start this block.",
+        "Use each control the program offers for the arm (Home, Park, Release arm, Move), one after another. Before each one, type its name and press Enter."
+      ],
+      "note": "Which controls, and what each did.",
+      "why": "Each control is a command ChromIQ can offer for the same purpose.",
+      "only_if": "Only if the program has such controls."
+    },
+    {
+      "id": "T21",
+      "label": "long-idle",
+      "title": "A long quiet time, then one measurement",
+      "priority": "important",
+      "minutes": 12,
+      "kind": "record",
+      "steps": [
+        "Start this block with the program open and the arm at rest.",
+        "Do nothing until the tool says the time is up (10 minutes; longer, up to an hour, is even better: just wait longer).",
+        "Then start a small measurement and let it read one row."
+      ],
+      "note": "Did anything happen on its own? Did the program ask for a new calibration?",
+      "why": "Programs often keep talking to an idle table, and a calibration may expire; ChromIQ must know both.",
+      "timer_minutes": 10
+    },
+    {
+      "id": "T22",
+      "label": "hand-extras",
+      "title": "Optional extras by hand",
+      "priority": "nice to have",
+      "minutes": 5,
+      "kind": "record",
+      "steps": [
+        "Only if you are comfortable with it, and only what the maker's manual allows (the manual wins over this list).",
+        "With the table switched OFF, move the arm gently out over the table, then start this block, switch the table on and start the program.",
+        "Or: start a measurement with the instrument not in the arm, and read what the program says."
+      ],
+      "note": "Which extra you did, and what the table and the program did.",
+      "why": "Some states can only be made by hand; they are optional and never needed for the rest."
+    },
+    {
+      "id": "Q1",
+      "label": "questions",
+      "title": "A few questions",
+      "priority": "essential",
+      "minutes": 3,
+      "kind": "question",
+      "steps": [
+        "No recording now. Answer the questions below; a short line each is fine."
+      ],
+      "questions": [
+        "Which table, and which instrument is mounted in it?",
+        "Which program and which version did you use, on which system?",
+        "Please measure with a ruler the distance from the centre of the first patch to the centre of the last patch of one row of the small chart, in millimetres.",
+        "Which chart files did you use (the program's own test chart, or one you made)? If you can, send them too.",
+        "Does the program offer anything for the table that these blocks did not cover?"
+      ],
+      "note": "",
+      "why": "The ruler measurement proves the unit of the table's coordinates, and the rest the recording cannot say.",
+      "short": true
+    }
+  ]
+}
