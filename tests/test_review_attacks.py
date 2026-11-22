@@ -274,7 +274,7 @@ def test_b1_f5_a_device_list_has_no_default_and_refuses_the_router(tmp_path):
     env.neighbours = lambda: [(RTR_IP, "e8:df:70:01:02:03"), (DEV_IP, "00:c0:ee:11:22:33")]
     env.connections = lambda: []
     env.gateways = lambda: [RTR_IP]
-    ui = Scripted(["", "3", "", "1", "3", "2", "q"])
+    ui = Scripted(["3", "", "1", "3", "2", "q"])
     cli.main(["--type", "network", "--short", "--folder", str(tmp_path), "--no-pause"], ui=ui,
              env=env)
     text = ui.text()
@@ -627,11 +627,11 @@ def test_b3_the_runner_asks_before_stopping_a_leftover(tmp_path):
                                "admin": ""}
     env.make_recorder = lambda kind, outdir, sel: recorders.PktmonRecorder(outdir, runner=fake)
     env.neighbours = lambda: [(RTR_IP, "e8:df:70:01:02:03")]
-    ui = Scripted(["", "2", DEV_IP, "n"])
+    ui = Scripted(["2", DEV_IP, "n"])
     code = cli.main(["--type", "network", "--short", "--folder", str(tmp_path), "--no-pause"],
                     ui=ui, env=env)
     assert code == 2 and fake.running and "pktmon stop" in ui.text()
-    ui = Scripted(["", "2", DEV_IP, "y", "q"])
+    ui = Scripted(["2", DEV_IP, "y", "q"])
     cli.main(["--type", "network", "--short", "--folder", str(tmp_path), "--no-pause"], ui=ui,
              env=env)
     assert "Stopped." in ui.text()

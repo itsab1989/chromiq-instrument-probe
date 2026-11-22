@@ -197,13 +197,17 @@ def test_sm3_nc_no_known_router_refuses(tmp_path):
 
 def test_sm3_nc_the_menu_refuses_when_the_router_is_unknown(tmp_path):
     from test_session_flow import make_env
+    import ipaddress as _ip
     env = make_env()
-    env.gateways = lambda: ["10.8.0.1"]          # a VPN's gateway: no network card known
+    # 2.0.1: a full-tunnel VPN (the IPv4 default route goes into utun3) and an address that
+    # is on none of this computer's own networks
+    env.network_facts = lambda: {"routes": [("", "utun3")],
+                                 "networks": {"en0": [_ip.ip_interface("192.168.178.23/24")]}}
     env.neighbours = lambda: []
-    ui = Scripted(["", "2", RTR_IP])
+    ui = Scripted(["2", "10.20.0.50", "q"])
     assert cli.main(["--type", "network", "--folder", str(tmp_path), "--no-pause"], ui=ui,
                     env=env) == 4
-    assert "could not identify this computer's router" in ui.text()
+    assert "default route goes into a tunnel interface (a VPN)" in ui.text()
 
 
 def test_sm1_nd_an_extender_phone_is_not_proposed(tmp_path):
@@ -417,12 +421,13 @@ def test_a_computer_without_any_router_may_record_its_instrument(tmp_path):
     from test_session_flow import make_env, net_recording, _Saver
     env = make_env(make=lambda stem: _Saver(net_recording(stem)))
     env.gateways = lambda: []
+    env.network_facts = lambda: {"routes": [], "networks": {}}
     env.neighbours = lambda: [(DEV_IP, "00:c0:ee:11:22:33")]
     env.connections = lambda: []
-    ui = Scripted(["", "2", DEV_IP, "", "e", "", "q"])
+    ui = Scripted(["2", DEV_IP, "", "e", "", "q"])
     code = cli.main(["--type", "network", "--short", "--folder", str(tmp_path), "--no-pause"],
                     ui=ui, env=env)
     assert code == 0, ui.text()
-    assert "no router at all" in ui.text()
+    assert "no IPv4 default route" in ui.text()
     zp = [p for p in tmp_path.iterdir() if p.name.startswith("SEND-THIS")][0]
     assert b"SPECTRO,1.2" in everything(zp)

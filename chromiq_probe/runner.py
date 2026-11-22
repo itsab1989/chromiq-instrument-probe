@@ -45,6 +45,7 @@ class Env:
         self.neighbours = discovery.neighbours
         self.connections = discovery.connections
         self.gateways = discovery.gateways
+        self.network_facts = discovery.network_facts
         self.refresh_usb = discovery.refresh_usb_selection
         self.readiness = recorders.readiness
         self.make_recorder = recorders.make_recorder
@@ -271,30 +272,18 @@ def choose_network(ui, env) -> dict:
     ui.say("")
     ui.say("Finding your instrument on the network. The tool only reads lists your computer "
            "already keeps; it sends nothing to find it.")
-    gateways = set(env.gateways())
-    neigh = dict(env.neighbours())
+    facts = env.network_facts()
+    neigh = dict(env.neighbours())        # may be empty on a Mac: macOS can hide it
+    gateways = {g for g, _i in facts.get("routes", []) if g}
     gw_macs = {neigh.get(g) for g in gateways if neigh.get(g)}
-    no_router = not gateways
-    if no_router:
-        ui.say("")
-        ui.say("This computer has no router at all (no default route), for example because its "
-               "only network is a cable straight to the instrument. Then there is no internet "
-               "traffic to protect; the tool keeps only the traffic of the address you choose.")
-    elif not gw_macs:
-        ui.say("")
-        ui.say("The tool could not identify this computer's router (and its network card). That "
-               "happens, for example, while a VPN is connected. Without it the tool cannot make "
-               "sure it is not recording your router and your internet traffic, so it does not "
-               "record. Please disconnect the VPN (or connect this computer to the network the "
-               "instrument is on), then start the tool again.")
-        raise StopSession("router unknown")
 
     def refuse(ip, mac) -> str:
-        if ip in gateways or (mac and mac in gw_macs):
-            return ("That is your router (this computer's way to the internet), not an "
-                    "instrument. Recording it would record your internet traffic, so the tool "
-                    "never does that. Please choose your instrument's own address.")
-        return ""
+        if mac and mac in gw_macs:
+            return ("That is your router's network card (this computer's way to the "
+                    "internet), not an instrument. Please choose your instrument's own "
+                    "address.")
+        r = discovery.router_check(ip, facts)
+        return "" if r["ok"] else r["why"]
     import ipaddress                                      # noqa: PLC0415
     while True:
         i = _menu(ui, "How would you like to find it?",
@@ -317,7 +306,9 @@ def choose_network(ui, env) -> dict:
         if i == 2:
             rows = [(ip, mac, "seen recently") for ip, mac in env.neighbours()]
             if not rows:
-                ui.say("The list is empty. Please type the address instead.")
+                ui.say("The list is empty. On a Mac (macOS 15 and newer) a program may see this "
+                       "list only after it was allowed under System Settings > Privacy & "
+                       "Security > Local Network. Typing the address works without that.")
                 i = 1
         if i == 1:
             a = ui.ask("  The instrument's address (for example 192.168.1.50): ").strip()
@@ -346,9 +337,12 @@ def choose_network(ui, env) -> dict:
     if not ipaddress.ip_address(ip).is_private:
         ui.say("Note: that is an internet address, not one on your own network. That is "
                "unusual for an instrument; please make sure it is the right one.")
+    check = discovery.router_check(ip, facts)
+    if check["why"]:
+        ui.say(check["why"])
     return {"transport": "net", "ips": [ip], "macs": [mac] if mac else [],
             "gateways": sorted(gateways), "gateway_macs": sorted(gw_macs),
-            "no_router": no_router,
+            "no_router": check["no_router"], "router_checked": True,
             "name": f"network instrument at {ip}",
             "verdict": "", "other_devices": None}
 
@@ -862,7 +856,8 @@ def guided(ui, env=None, base: str = ".", args=None) -> int:
             data = sessions.load(args["session_file"]) if args.get("session_file") else None
             kind = data["id"] if data else (args.get("type") or choose_type(ui))
             data = data or sessions.builtin(kind)
-            transport = choose_transport(ui, data)
+            # a network instrument needs no connection question (2.0.1: it asked anyway)
+            transport = "net" if data.get("id") == "network" else choose_transport(ui, data)
             ready = env.readiness(transport)              # before any question (review m12)
             if not ready["can"] and not args.get("import_mode"):
                 ui.say("")

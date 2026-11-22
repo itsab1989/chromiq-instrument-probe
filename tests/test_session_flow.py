@@ -60,6 +60,9 @@ def make_env(transport="usb", make=usb_recording, devices=None, private=None):
     priv = private or tempfile.mkdtemp(dir=os.environ["CHROMIQ_PROBE_HOME"])
     env.private_root = lambda: priv
     env.gateways = lambda: ["192.168.178.1"]
+    import ipaddress as _ip
+    env.network_facts = lambda: {"routes": [("192.168.178.1", "en0")],
+                                 "networks": {"en0": [_ip.ip_interface("192.168.178.23/24")]}}
     env.refresh_usb = lambda sel: None
     env.watch_interval = 0.01
     seq = [[KEYBOARD], [KEYBOARD, INSTRUMENT]] if devices is None else devices
@@ -206,7 +209,7 @@ def test_network_session_by_typed_address(tmp_path):
     env = make_env(make=lambda stem: _Saver(net_recording(stem)))
     env.neighbours = lambda: [(DEV_IP, "00:c0:ee:11:22:33"), ("192.168.178.1", "e8:df:70:01:02:03")]
     env.connections = lambda: []
-    ui = Scripted(["", "2", DEV_IP, "", "e", "", "q"])    # N01: record, note, quit
+    ui = Scripted(["2", DEV_IP, "", "e", "", "q"])    # N01: record, note, quit
     code = cli.main(["--type", "network", "--short", "--folder", str(tmp_path), "--no-pause"],
                     ui=ui, env=env)
     assert code == 0, ui.text()

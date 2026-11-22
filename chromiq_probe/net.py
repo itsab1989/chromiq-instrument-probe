@@ -190,7 +190,7 @@ class NetPlan:
         self.ips = set(self.dev.ips)
         self.gateways = {ipaddress.ip_address(g) for g in selection.get("gateways", [])}
         self.gateway_known = "gateways" not in selection or bool(selection.get("gateways")) \
-            or bool(selection.get("no_router"))
+            or bool(selection.get("no_router")) or bool(selection.get("router_checked"))
         self.gateway_macs = {parse_mac(m) for m in selection.get("gateway_macs", [])}
         self.dev_ports: set = set()      # ports the instrument's own address used
         self.talks: dict = {}            # candidate ip -> {"n": packets, "ports": set}
