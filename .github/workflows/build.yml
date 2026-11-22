@@ -27,7 +27,7 @@ jobs:
             asset: chromiq-instrument-probe-windows.exe
             universal: false
           # One fat binary for both Intel and Apple-Silicon Macs.
-          - os: macos-14
+          - os: macos-15
             asset: chromiq-instrument-probe-macos
             universal: true
     steps:
