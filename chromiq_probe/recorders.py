@@ -75,21 +75,23 @@ def private_root() -> str:
     return path
 
 
-def restrict_to_user(path: str) -> bool:
+def restrict_to_user(path: str, windows: bool | None = None, run=None,
+                     icacls: str | None = None) -> bool:
     """Windows: remove inherited rights and give the folder to this user only
     (and SYSTEM, which can read everything anyway). Our own folder only.
     Returns False when that could not be done (review 2, S-m4): the caller then
-    refuses to record into it."""
-    if os.name != "nt":
+    refuses to record into it. `windows`, `run` and `icacls` exist for the tests."""
+    if not (os.name == "nt" if windows is None else windows):
         return True
     user = os.environ.get("USERNAME")
-    icacls = system32("icacls.exe")
+    icacls = icacls or system32("icacls.exe")
     if not user or not os.path.exists(icacls):
         return False
+    run = run or subprocess.run
     try:
-        p = subprocess.run([icacls, path, "/inheritance:r", "/grant:r", f"{user}:(OI)(CI)F",
-                            "/grant:r", "SYSTEM:(OI)(CI)F"], stdin=subprocess.DEVNULL,
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
+        p = run([icacls, path, "/inheritance:r", "/grant:r", f"{user}:(OI)(CI)F",
+                 "/grant:r", "SYSTEM:(OI)(CI)F"], stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
     except (OSError, subprocess.TimeoutExpired):
         return False
     return p.returncode == 0
@@ -269,7 +271,9 @@ def _kill_with_us(proc) -> None:
         pass
 
 
-def _base(exe: str) -> list:
+def _base(exe) -> list:
+    if not exe:
+        raise RecorderError("the recording program was not found")
     # a ".py" stand-in (the tests' fake recorders) runs with this Python
     return [sys.executable, exe] if exe.lower().endswith(".py") else [exe]
 
@@ -373,7 +377,15 @@ class _ProcRecorder:
         for iface in self.interfaces:
             path = os.path.join(self.outdir, f"{stem}-{self.iface_label(iface)}-full.pcap")
             self.files[iface] = path
-            entry = self._launch(iface, self.command(iface, path), path, "first try")
+            try:
+                cmd = self.command(iface, path)
+            except RecorderError as exc:
+                self.notes.append(f"{self.label} could not be started: {exc} (it is looked for "
+                                  "only in the system's own folders)")
+                self.diag.append({"interface": str(iface), "attempt": "first try",
+                                  "command": "(none)", "file": "", "result": str(exc)})
+                continue
+            entry = self._launch(iface, cmd, path, "first try")
             if entry.get("result") == "running":
                 live.append(iface)
                 continue

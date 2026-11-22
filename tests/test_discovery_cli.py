@@ -61,6 +61,7 @@ def test_parse_windows_pnp_ignores_interfaces():
     assert [d.ids for d in devs] == ["1234:5678", "046d:c31c"]
 
 
+@pytest.mark.skipif(os.name == "nt", reason="sysfs names hold ':', which Windows paths cannot")
 def test_linux_sysfs(tmp_path):
     d = tmp_path / "1-2"
     (d / "1-2:1.0").mkdir(parents=True)

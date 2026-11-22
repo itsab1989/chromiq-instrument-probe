@@ -414,20 +414,36 @@ def test_m1_fragments_and_real_duplicates(tmp_path):
 def test_b4_f2_private_folders_and_no_full_recording_left(tmp_path):
     from test_session_flow import ANSWERS_USB, make_env
     env = make_env()
+    made_private = []
+    if os.name == "nt":                      # Windows: the folders get a user-only ACL
+        import chromiq_probe.recorders as rec
+
+        def fake(path):
+            made_private.append(os.path.abspath(path))
+            return True
+        rec_orig = rec.restrict_to_user
+        rec.restrict_to_user = fake
     old = os.umask(0o022)
     try:
         code = cli.main(["--type", "handheld", "--short", "--folder", str(tmp_path),
                          "--no-pause"], ui=Scripted(list(ANSWERS_USB)), env=env)
     finally:
         os.umask(old)
+        if os.name == "nt":
+            rec.restrict_to_user = rec_orig
     assert code == 0
     sess = [p for p in tmp_path.iterdir() if p.name.startswith("probe-session-")][0]
     raw_root = os.path.join(env.private_root(), "raw")
-    for p in [sess, sess / "kept"] + [os.path.join(raw_root, d) for d in os.listdir(raw_root)]:
-        assert stat.S_IMODE(os.stat(p).st_mode) == 0o700, p
-    for root, _dirs, files in os.walk(tmp_path):
-        for f in files:
-            assert stat.S_IMODE(os.stat(os.path.join(root, f)).st_mode) & 0o077 == 0, f
+    folders = [sess, sess / "kept"] + [os.path.join(raw_root, d) for d in os.listdir(raw_root)]
+    if os.name == "nt":
+        for p in folders:
+            assert os.path.abspath(p) in made_private, p
+    else:
+        for p in folders:
+            assert stat.S_IMODE(os.stat(p).st_mode) == 0o700, p
+        for root, _dirs, files in os.walk(tmp_path):
+            for f in files:
+                assert stat.S_IMODE(os.stat(os.path.join(root, f)).st_mode) & 0o077 == 0, f
     for d in os.listdir(raw_root):
         left = [f for f in os.listdir(os.path.join(raw_root, d)) if f.endswith(".pcap")]
         assert left == [], "full recordings are deleted after each block"

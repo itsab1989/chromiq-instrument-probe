@@ -308,7 +308,9 @@ def test_sm8_files_are_created_0600(tmp_path):
     r = recorders.TcpdumpRecorder(["en0"], str(tmp_path), sudo=None, tcpdump="x")
     p = tmp_path / "f.pcap"
     r._prepare(str(p))
-    assert stat.S_IMODE(os.stat(p).st_mode) == 0o600
+    assert p.exists()
+    if os.name != "nt":                      # Windows has no such modes; its rights: icacls
+        assert stat.S_IMODE(os.stat(p).st_mode) == 0o600
 
 
 # ---- re-check R-1: binary data passes byte-identical ---------------------------------

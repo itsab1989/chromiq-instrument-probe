@@ -52,17 +52,10 @@ jobs:
       - name: Install PyInstaller and pytest
         run: python3 -m pip install --upgrade pip pyinstaller pytest
 
-      # The tests were written and run on macOS; Linux is expected to pass too.
-      # Some check POSIX file modes, so on Windows they run for information only
-      # (a failure there does not stop the build) until they are made Windows-aware.
+      # The tests block every build, Windows included (2.0.1: the four that failed there
+      # in the 2.0.0 run were made right for Windows).
       - name: Run the tests (made-up recordings only)
-        if: runner.os != 'Windows'
         run: python3 -m pytest -q
-
-      - name: Run the tests on Windows (for information)
-        if: runner.os == 'Windows'
-        continue-on-error: true
-        run: python -m pytest -q
 
       - name: Build one-file executable
         shell: bash

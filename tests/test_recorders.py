@@ -45,7 +45,7 @@ def test_tcpdump_command_and_bpf(tmp_path):
 
 def test_tcpdump_usb_on_a_mac_uses_sudo_n_and_marks_usb(tmp_path):
     r = recorders.TcpdumpRecorder(["XHC0", "XHC1"], str(tmp_path), mac_usb=True,
-                                  sudo="/usr/bin/sudo")
+                                  sudo="/usr/bin/sudo", tcpdump="/usr/sbin/tcpdump")
     assert r.transport == "usb"
     assert r.command("XHC0", "/x.pcap")[:3] == ["/usr/bin/sudo", "-n", r.tcpdump]
 
@@ -123,3 +123,40 @@ def test_the_tool_has_no_way_to_send():
                     r"\.sendto\(", r"urllib", r"http\.client", r"import serial", r"import usb\b",
                     r"pyusb", r"libusb", r"ctypes\.CDLL"):
             assert not re.search(bad, src), f"{name}: {bad}"
+
+
+def test_a_missing_tcpdump_is_said_not_a_crash(tmp_path):
+    """2.0.1: on a system without tcpdump in its own folders, command() met None."""
+    r = recorders.TcpdumpRecorder(["en0"], str(tmp_path), sudo=None)
+    r.tcpdump = None
+    assert r.start("N01-connect") == []
+    assert "could not be started: the recording program was not found" in r.notes[0]
+
+
+def test_the_windows_folder_rights_are_checked(tmp_path, monkeypatch):
+    calls = []
+
+    class Done:
+        def __init__(self, code):
+            self.returncode = code
+
+    fake = tmp_path / "icacls.exe"
+    fake.write_text("")
+    monkeypatch.setenv("USERNAME", "mira")
+    ok = recorders.restrict_to_user(str(tmp_path), windows=True, icacls=str(fake),
+                                    run=lambda cmd, **k: calls.append(cmd) or Done(0))
+    assert ok and calls[0][1:5] == [str(tmp_path), "/inheritance:r", "/grant:r",
+                                    "mira:(OI)(CI)F"]
+    assert recorders.restrict_to_user(str(tmp_path), windows=True, icacls=str(fake),
+                                      run=lambda cmd, **k: Done(5)) is False
+    monkeypatch.delenv("USERNAME")
+    assert recorders.restrict_to_user(str(tmp_path), windows=True, icacls=str(fake),
+                                      run=lambda cmd, **k: Done(0)) is False
+
+
+def test_a_folder_that_cannot_be_made_private_stops_the_recording(tmp_path, monkeypatch):
+    from chromiq_probe import runner
+    monkeypatch.setattr(recorders, "restrict_to_user", lambda path: False)
+    import pytest
+    with pytest.raises(runner.NotPrivate):
+        runner.make_private_dir(str(tmp_path / "x"))
